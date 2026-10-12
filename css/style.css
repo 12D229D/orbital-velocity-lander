@@ -1,0 +1,309 @@
+:root {
+    --hue-space: 220;
+    --hue-accent: 190;
+    --hue-warning: 15;
+    
+    --c-bg: hsl(var(--hue-space), 40%, 5%);
+    --c-hud-bg: hsla(var(--hue-space), 50%, 15%, 0.6);
+    --c-hud-border: hsla(var(--hue-accent), 70%, 50%, 0.4);
+    --c-text: hsl(var(--hue-accent), 80%, 80%);
+    --c-text-bright: hsl(var(--hue-accent), 100%, 95%);
+    --c-warning: hsl(var(--hue-warning), 90%, 60%);
+    --c-success: hsl(120, 70%, 60%);
+    
+    --font-ui: 'Orbitron', sans-serif;
+    --font-text: 'Inter', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+body {
+    background-color: var(--c-bg);
+    color: var(--c-text);
+    font-family: var(--font-text);
+    overflow: hidden; /* Prevent scrolling */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+}
+
+#game-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-width: 1920px;
+    max-height: 1080px;
+    background: radial-gradient(circle at center, hsl(var(--hue-space), 30%, 10%), var(--c-bg));
+    box-shadow: 0 0 50px rgba(0,0,0,0.8) inset;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* --- HUD OVERLAY --- */
+#hud {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Let clicks pass through to canvas if needed */
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.hud-panel {
+    background: var(--c-hud-bg);
+    border: 1px solid var(--c-hud-border);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 8px;
+    padding: 15px 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    height: fit-content;
+}
+
+.telemetry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    font-family: var(--font-ui);
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
+
+.telemetry .label {
+    color: var(--c-text);
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+.telemetry span:not(.label) {
+    color: var(--c-text-bright);
+    font-weight: 500;
+    min-width: 80px;
+    text-align: right;
+}
+
+.warning span:not(.label) {
+    color: var(--c-warning) !important;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+/* Fuel Bar */
+.fuel-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+}
+.fuel-bar-bg {
+    width: 100%;
+    min-width: 150px;
+    height: 12px;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid var(--c-hud-border);
+    border-radius: 6px;
+    overflow: hidden;
+}
+.fuel-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--c-warning), var(--c-success));
+    width: 100%;
+    transition: width 0.1s linear, background 0.3s;
+}
+
+/* --- SCREENS --- */
+.screen {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+.screen h1 {
+    font-family: var(--font-ui);
+    font-size: 4rem;
+    color: var(--c-text-bright);
+    text-shadow: 0 0 20px hsla(var(--hue-accent), 80%, 60%, 0.8);
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.screen p {
+    font-family: var(--font-ui);
+    font-size: 1.5rem;
+    letter-spacing: 4px;
+    color: var(--c-text);
+    margin-bottom: 40px;
+}
+
+.controls-info {
+    margin-bottom: 50px;
+    background: var(--c-hud-bg);
+    padding: 20px 40px;
+    border-radius: 8px;
+    border: 1px solid var(--c-hud-border);
+    text-align: center;
+}
+
+.controls-info p {
+    margin: 0;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    line-height: 2;
+}
+
+button {
+    font-family: var(--font-ui);
+    font-size: 1.2rem;
+    padding: 15px 40px;
+    background: transparent;
+    color: var(--c-text-bright);
+    border: 2px solid var(--c-text);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    pointer-events: auto;
+}
+
+button:hover {
+    background: var(--c-text);
+    color: var(--c-bg);
+    box-shadow: 0 0 20px var(--c-text);
+}
+
+/* --- OVERLAYS (Messages) --- */
+.message-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--c-hud-bg);
+    border: 2px solid var(--c-hud-border);
+    padding: 40px 60px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0,0,0,0.8);
+    pointer-events: auto;
+}
+
+.message-overlay h2 {
+    font-family: var(--font-ui);
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+.message-overlay.success h2 {
+    color: var(--c-success);
+    text-shadow: 0 0 15px var(--c-success);
+}
+
+.message-overlay.failure h2 {
+    color: var(--c-warning);
+    text-shadow: 0 0 15px var(--c-warning);
+}
+
+.message-overlay p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    color: var(--c-text-bright);
+}
+
+/* --- BUTTON GROUP (en overlay) --- */
+.btn-group {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* --- TOUCH CONTROLS --- */
+#touch-controls {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    z-index: 20;
+    pointer-events: auto;
+}
+
+.touch-btn {
+    font-family: var(--font-ui);
+    font-size: 1.8rem;
+    width: 80px;
+    height: 80px;
+    padding: 0;
+    background: var(--c-hud-bg);
+    color: var(--c-text-bright);
+    border: 2px solid var(--c-hud-border);
+    border-radius: 50%;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: all 0.1s ease;
+    touch-action: none;
+    letter-spacing: 0;
+    pointer-events: auto;
+}
+
+.touch-btn:active,
+.touch-btn.pressed {
+    background: hsla(var(--hue-accent), 70%, 40%, 0.7);
+    box-shadow: 0 0 20px hsla(var(--hue-accent), 80%, 60%, 0.6);
+    transform: scale(0.93);
+}
+
+.touch-btn.thrust-btn {
+    width: 100px;
+    height: 100px;
+    font-size: 2.2rem;
+    border-color: hsla(var(--hue-accent), 80%, 60%, 0.7);
+    box-shadow: 0 0 15px hsla(var(--hue-accent), 70%, 40%, 0.3);
+}
+
+.touch-btn.thrust-btn:active,
+.touch-btn.thrust-btn.pressed {
+    background: hsla(var(--hue-warning), 80%, 30%, 0.8);
+    box-shadow: 0 0 25px hsla(var(--hue-warning), 90%, 60%, 0.7);
+}
+
+/* Solo mostrar en pantallas táctiles */
+@media (pointer: coarse) {
+    #touch-controls:not(.hidden) {
+        display: flex;
+    }
+}
+
+.hidden {
+    display: none !important;
+}

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbital Velocity Lander</title>
+    <meta name="description" content="Simulador arcade 2D de aterrizaje espacial con físicas vectoriales y terreno procedimental.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="game-canvas"></canvas>
+        
+        <!-- HUD Overlay -->
+        <div id="hud" class="hidden">
+            <div class="hud-panel top-left">
+                <div class="telemetry">
+                    <span class="label">ALT</span>
+                    <span id="altimeter">0000</span>
+                </div>
+                <div class="telemetry">
+                    <span class="label">V-VEL</span>
+                    <span id="v-speed">0.00</span>
+                </div>
+                <div class="telemetry">
+                    <span class="label">H-VEL</span>
+                    <span id="h-speed">0.00</span>
+                </div>
+                <div class="telemetry">
+                    <span class="label">WIND</span>
+                    <span id="wind-display">→ 0.00</span>
+                </div>
+            </div>
+            
+            <div class="hud-panel top-right">
+                <div class="telemetry fuel-container">
+                    <span class="label">FUEL</span>
+                    <div class="fuel-bar-bg">
+                        <div id="fuel-bar" class="fuel-bar-fill"></div>
+                    </div>
+                </div>
+                <div class="telemetry">
+                    <span class="label">SCORE</span>
+                    <span id="score">0</span>
+                </div>
+                <div class="telemetry">
+                    <span class="label">LEVEL</span>
+                    <span id="level-display">1</span>
+                </div>
+            </div>
+            
+            <div class="message-overlay hidden" id="message-overlay">
+                <h2 id="message-title">TITLE</h2>
+                <p id="message-subtitle">Subtitle</p>
+                <div class="btn-group">
+                    <button id="btn-next-level" class="hidden">NEXT LEVEL</button>
+                    <button id="btn-restart">RESTART</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="start-screen" class="screen">
+            <h1>ORBITAL VELOCITY</h1>
+            <p>LANDER SIMULATOR</p>
+            <div class="controls-info">
+                <p>↑ / W — Thrust &nbsp;&nbsp; ← / A — Rotate Left &nbsp;&nbsp; → / D — Rotate Right</p>
+            </div>
+            <button id="btn-start">INITIATE LAUNCH</button>
+        </div>
+
+        <!-- Touch Controls (shown only on touch devices) -->
+        <div id="touch-controls" class="hidden">
+            <button id="btn-touch-left" class="touch-btn" aria-label="Rotar izquierda">◀</button>
+            <button id="btn-touch-thrust" class="touch-btn thrust-btn" aria-label="Propulsor">▲</button>
+            <button id="btn-touch-right" class="touch-btn" aria-label="Rotar derecha">▶</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/physics.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/terrain.js"></script>
+    <script src="js/lander.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
